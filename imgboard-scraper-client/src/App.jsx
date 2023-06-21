@@ -48,17 +48,31 @@ function App() {
             <button onClick={(e) => handleOnPost(e)}>POST</button>
             <button onClick={(e) => handleOnShowFolder(e)}>show folder</button>
             <input type="text" style={{ width: "500px" }} onChange={(e) => setNewLink(e.target.value)}></input>
-            <div style={{width: "500px"}}>
+            <div style={{ width: "500px" }}>
                 <p>imgs</p>
                 {/* <img style={{width: "500px"}}src={testimg}></img> */}
                 {imgs.map((img) => {
-                    return (
-                        <div>
-                            {img}
-                            {/* <img src={testimg}></img> */}
-                            <img style={{width: "500px"}} src={"/download/"+img}></img>
-                        </div>
-                    )
+                    const re = /(?:\.([^.]+))?$/
+                    const filetype = re.exec(img)[1]
+                    console.log(filetype)
+                    if (filetype === "gif" || filetype === "png" || filetype === "jpg" || filetype === "jpeg") {
+                        return (
+                            <div>
+                                {/* <p>filetype: {img} </p> */}
+                                {/* <img src={testimg}></img> */}
+                                <img style={{ width: "500px" }} src={"/download/" + img}></img>
+                            </div>
+                        )
+                    }
+                    else if (filetype === "webm") {
+                        return (
+                            <div>
+                                <video style={{ width: "500px" }} controls>
+                                    <source src={"/download/" + img}></source>
+                                </video>
+                            </div>
+                        )
+                    }
                 })}
             </div>
         </div>

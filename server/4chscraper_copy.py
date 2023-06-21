@@ -39,17 +39,13 @@ def parse_url(thread_URL):
     links = soup.find_all("a", class_="fileThumb")
     return links
 
-# downloads file into static folder
-
-
+# downloads file into downloads folder
 def download(url, file_name):
     with open("./../imgboard-scraper-client/public/download/"+file_name, "wb") as file:
         res = get(url)
         file.write(res.content)
 
 # after getting a regex match array, this flattens an array of characters
-
-
 def flattenPostNumArr(arr):
     res = ""
     for i in range(1, len(arr)):
@@ -84,8 +80,8 @@ async def post_link(payload: dict = Body(...)):
 
 
 @app.get("/show-folder")
-def show_folder():
+async def show_folder():
     print("def show-folder")
     filenames = next(walk("./../imgboard-scraper-client/public/download/"), (None, None, []))[2]  # [] if no file
-    print(filenames)
+    # print(filenames)
     return filenames
