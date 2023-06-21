@@ -6,6 +6,7 @@ from requests import get
 import re
 import os
 import urllib.request
+from os import walk
 import shutil
 import sys
 
@@ -42,7 +43,7 @@ def parse_url(thread_URL):
 
 
 def download(url, file_name):
-    with open("./download/"+file_name, "wb") as file:
+    with open("./../imgboard-scraper-client/public/download/"+file_name, "wb") as file:
         res = get(url)
         file.write(res.content)
 
@@ -77,7 +78,7 @@ async def post_link(payload: dict = Body(...)):
         fileName = postNum + fileExt
 
         # this downloads one file named as the post number
-        if not os.path.exists(f"./download/{fileName}"):
+        if not os.path.exists(f"./../imgboard-scraper-client/public/download/{fileName}"):
             download(_link, fileName)
     return
 
@@ -85,5 +86,6 @@ async def post_link(payload: dict = Body(...)):
 @app.get("/show-folder")
 def show_folder():
     print("def show-folder")
-    filenames = next(walk(mypath), (None, None, []))[2]  # [] if no file
-    return ("returned")
+    filenames = next(walk("./../imgboard-scraper-client/public/download/"), (None, None, []))[2]  # [] if no file
+    print(filenames)
+    return filenames
