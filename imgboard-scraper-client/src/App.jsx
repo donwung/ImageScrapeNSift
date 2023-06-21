@@ -31,11 +31,22 @@ function App() {
         })
     }
 
+    const handleOnShowFolder = (e) => {
+        e.preventDefault();
+        axios.get(`http://127.0.0.1:8000/show-folder`)
+            .then((res) => {
+                console.log(res)
+            }).catch((err) => {
+                console.log(err)
+            })
+    }
+
     return (
         <div style={{ display: "flex", flexDirection: "column" }}>
             <a href={newLink}><button onClick={() => handleOnGet()}>GOTO</button></a>
-            <a href={newLink}><button onClick={(e) => handleOnPost(e)}>POST</button></a>
-            <input type="text" onChange={(e) => setNewLink(e.target.value)}></input>
+            <button onClick={(e) => handleOnPost(e)}>POST</button>
+            <button onClick={(e) => handleOnShowFolder(e)}>show folder</button>
+            <input type="text" style={{ width: "500px" }} onChange={(e) => setNewLink(e.target.value)}></input>
             <div>
                 <p>imglinks</p>
                 <img src="https://i.4cdn.org/v/1687281098418245.png"></img>
