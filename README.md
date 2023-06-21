@@ -2,6 +2,8 @@
 
 An webpage image scraper, doubling as a sifting tool (if desired).
 
+Uses the React framework as a front-end, with FastAPI as a Python back-end.
+
 The scraping part is pretty straightforward. This uses Beautiful Soup 4 to download all images from a webpage.
 
 The sifting tool is to only download select images instead of all of them.
