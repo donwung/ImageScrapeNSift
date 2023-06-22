@@ -85,6 +85,7 @@ async def post_link(payload: dict = Body(...)):
     number_of_threads = 8
     links = parse_url(URL_to_scrape)
 
+    # don't know enough yet lol
     t1 = threading.Thread(
         target=dl_img_at_indices, args=(links, all_imgs, number_of_threads, 1))
     t2 = threading.Thread(
@@ -119,31 +120,34 @@ async def post_link(payload: dict = Body(...)):
     t6.join()
     t7.join()
     t8.join()
-
-    # for link in links:
-    #     _link = "https:"+link.get("href")
-    #     # print(_link)
-
-    #     postNum = re.findall("[0123456789]", _link)
-    #     postNum = flattenPostNumArr(postNum)
-
-    #     fileExt = re.findall("\.[a-z]+", _link)
-    #     fileExt = fileExt[1]
-
-    #     oneFile = [postNum, fileExt]
-    #     allImgs.append(oneFile)
-    #     fileName = postNum + fileExt
-
-    #     # this downloads one file named as the post number
-    #     if not os.path.exists(f"./../imgboard-scraper-client/public/download/{fileName}"):
-    #         download(_link, fileName)
     return
 
 
 @app.get("/show-folder")
 async def show_folder():
-    print("def show-folder")
+    filenames = get_file_names()
+    return filenames
+
+
+def get_file_names():
+    # print("def show-folder")
     filenames = next(walk("./../imgboard-scraper-client/public/download/"),
                      (None, None, []))[2]  # [] if no file
     # print(filenames)
     return filenames
+
+
+@app.post("/delete-imgs")
+def delete_imgs(payload: dict = Body(...)):
+    # print("deleting")
+    imgs_to_delete = payload["imgs"]
+    # print(imgs_to_delete)
+    delete_imgs_from_folder(imgs_to_delete)
+
+
+def delete_imgs_from_folder(imgs):
+    # print(imgs)
+    for img in imgs:
+        if img in get_file_names():
+            print("removing" + img)
+            os.remove("./../imgboard-scraper-client/public/download/"+img)
