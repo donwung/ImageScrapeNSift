@@ -46,7 +46,12 @@ function App() {
     const handleOnImgClick = (img, i) => {
         console.log(img + " at index: " + i)
 
-        const updated = selectedImgs
+        // NOTE: this code won't run because updated contains the *reference* to selectedImgs
+        // and selectedImgs reference didn't change - hance rerender not occurring
+        // const updated = selectedImgs
+
+        // using the spread operator fills up the new reference with values instead of sending a reference itself
+        const updated = [...selectedImgs]
         if (!(updated.find((imgname) => imgname === img))) {
             // add image to selectedImgs
             updated.push(img)
@@ -72,10 +77,6 @@ function App() {
         })
     }
 
-    useEffect(() => {
-
-    }, [selectedImgs])
-
     return (
         <div>
             <div style={{ display: "flex", flexDirection: "column" }}>
@@ -98,9 +99,19 @@ function App() {
                             // console.log(filetype)
                             if (filetype === "gif" || filetype === "png" || filetype === "jpg" || filetype === "jpeg") {
                                 return (
-                                    <div onClick={() => { handleOnImgClick(img, i); document.getElementById(img).scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'center' }) }} id={img}>
+                                    <div id={img} >
+                                        <div onClick={() => handleOnImgClick(img, i)}>
+                                            {selectedImgs.find((imgname) => imgname === img) ?
+                                                <h2>DELETING</h2> :
+                                                <h2>SAVING</h2>}
+                                        </div>
                                         <div>
-                                            <h3 style={selectedImgs.find((imgname) => imgname === img) && { color: "green" }}>checkhere</h3>
+                                            <button onClick={() => document.getElementById(imgs[i - 1]).scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'center' })}>prev</button>
+                                            <button onClick={() => document.getElementById(imgs[i + 1]).scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'center' })}>next</button>
+                                        </div>
+                                        {/* <div onClick={() => document.getElementById(img).scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'center' })}> */}
+                                        <div>
+                                            {/* <div > */}
                                             {/* <p>filetype: {img} </p> */}
                                             {/* <img src={testimg}></img> */}
                                             <img style={{ width: "500px" }} src={"/download/" + img}></img>
