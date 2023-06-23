@@ -9,6 +9,7 @@ function App() {
     const [newLink, setNewLink] = useState("")
     const [imgs, setImgs] = useState([])
     const [selectedImgs, setSelectedImgs] = useState([])
+    const [currentIdx, setCurrentIdx] = useState(0)
 
     const handleOnGet = () => {
         axios.get(`http://127.0.0.1:8000/goto-link?URL=${newLink}`)
@@ -77,6 +78,63 @@ function App() {
         })
     }
 
+    const handleOnScrollToImg = (e, i, next) => {
+        // if I don't add this, then either getElementById or scrollIntoView just "break"
+        // no idea why it was working previously without any hitches
+        e.preventDefault()
+        e.stopPropagation()
+
+
+        // console.log(imgs[currentIdx])
+        // console.log(i)
+        // console.log(imgs[i])
+
+        // console.log(document.getElementById(imgs[i + 1]))
+
+        // console.log(i)
+        console.log(currentIdx)
+        console.log(imgs[currentIdx])
+        console.log(document.getElementById(imgs[currentIdx]))
+
+        if (next) {
+            if (currentIdx === i) {
+                document.getElementById(imgs[currentIdx + 1]).scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'center' })
+                setCurrentIdx(currentIdx + 1)
+            } else {
+                document.getElementById(imgs[i + 1]).scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'center' })
+                setCurrentIdx(i + 1)
+            }
+        } else {
+            if (currentIdx === i) {
+                console.log("prev")
+                document.getElementById(imgs[currentIdx - 1]).scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'center' })
+                setCurrentIdx(currentIdx - 1)
+            } else {
+                document.getElementById(imgs[i - 1]).scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'center' })
+                setCurrentIdx(i - 1)
+            }
+        }
+    }
+
+    useEffect(() => {
+        const handleKeydown = (e) => {
+            console.log(e.key)
+            if (e.key === "ArrowRight") {
+                handleOnScrollToImg(e, currentIdx, true)
+            }
+            if (e.key === "ArrowLeft") {
+                handleOnScrollToImg(e, currentIdx, false)
+            }
+        }
+
+        window.addEventListener("keydown", handleKeydown)
+        return () => {
+            window.removeEventListener("keydown", handleKeydown);
+        };
+
+    }, [imgs, currentIdx])
+
+
     return (
         <div>
             <div style={{ display: "flex", flexDirection: "column" }}>
@@ -105,9 +163,10 @@ function App() {
                                                 <h2>DELETING</h2> :
                                                 <h2>SAVING</h2>}
                                         </div>
+                                        <p>{img}</p>
                                         <div>
-                                            <button onClick={() => document.getElementById(imgs[i - 1]).scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'center' })}>prev</button>
-                                            <button onClick={() => document.getElementById(imgs[i + 1]).scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'center' })}>next</button>
+                                            <button onClick={(e) => handleOnScrollToImg(e, i, false)}>prev</button>
+                                            <button onClick={(e) => handleOnScrollToImg(e, i, true)}>next</button>
                                         </div>
                                         {/* <div onClick={() => document.getElementById(img).scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'center' })}> */}
                                         <div>
@@ -122,6 +181,15 @@ function App() {
                             else if (filetype === "webm") {
                                 return (
                                     <div>
+                                        <div onClick={() => handleOnImgClick(img, i)}>
+                                            {selectedImgs.find((imgname) => imgname === img) ?
+                                                <h2>DELETING</h2> :
+                                                <h2>SAVING</h2>}
+                                        </div>
+                                        <div>
+                                            <button onClick={() => handleOnScrollToImg(0)}>prev</button>
+                                            <button onClick={() => document.getElementById(imgs[i + 1]).scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'center' })}>next</button>
+                                        </div>
                                         {/* <video style={{ width: "500px" }} controls>
                                     <source src={"/download/" + img}></source>
                                 </video> */}
