@@ -58,6 +58,7 @@ function App() {
             updated.push(img)
         } else {
             // remove image from selectedImgs
+            console.log("removing")
             const i = updated.indexOf(img)
             if (i > -1) { // only splice array when item is found
                 updated.splice(i, 1);
@@ -125,6 +126,9 @@ function App() {
             if (e.key === "ArrowLeft") {
                 handleOnScrollToImg(e, currentIdx, false)
             }
+            if (e.key === "ArrowUp") {
+                handleOnImgClick(imgs[currentIdx], currentIdx)
+            }
         }
 
         window.addEventListener("keydown", handleKeydown)
@@ -132,7 +136,7 @@ function App() {
             window.removeEventListener("keydown", handleKeydown);
         };
 
-    }, [imgs, currentIdx])
+    }, [imgs, currentIdx, selectedImgs])
 
 
     return (
