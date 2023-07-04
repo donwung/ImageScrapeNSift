@@ -14,4 +14,4 @@ Some webpages have a lot of cool images you want to keep. But a lot of other ima
 
 So this tool offers a convenient, mouseless sifting tool to pick and choose what you want without having to right-click -> delete one image at a time after scraping something.
 
-If you only want to use the sifting tool, it is also available to use on a folder of your choosing.
+~~If you only want to use the sifting tool, it is also available to use on a folder of your choosing.~~ WIP
